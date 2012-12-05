@@ -11,4 +11,5 @@ Co brakuje:
 
 Status:
 ======
-(usunęte na chwilkę...)
+
+[![Status bilda](https://secure.travis-ci.org/TexasRangers/jabberwocky.png?branch=master)](https://travis-ci.org/TexasRangers/jabberwocky)
