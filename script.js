@@ -8,7 +8,7 @@ var tem = [];// zmienna tymczasowa - przechowuje pary do porownania
 tem[1] = 0;
 tem[2] = 0;
 var koniec_testu = true;
-var flips = 0; //licznik prob 
+var flips = 0; //licznik prob
 
 var p = 0;// licznik odkrytych pojedynczych pol
 
@@ -22,14 +22,20 @@ var start_time, end_time;
 var ZAKR = "zakryty", ODKR = "odkryty";
 
 // USTAW OBRAZKI
-var pole = []; // tablica 
+var pole = inicjuj_pola();
 
-// inicjuj pola
+/**
+ * inicjuj pola.
+ * @return poczatkowy stan pol (wszystkie zakryte)
+ */
 function inicjuj_pola() {
-    // 25 elementów - max możliwych 
-    for(var i = 0; i <= 25; i++) {
+    // 25 elementów - max możliwych
+    var rozmiar = 25;
+    var pole = [];
+    for(var i = 0; i < 25; i++) {
         pole[i] = { obr: 0, stan: ZAKR };
     }
+    return pole;
 }
 
 /**
@@ -52,29 +58,29 @@ function inicjuj_obrazki() {
 function genTab(lix, liy) {
 	var lixy = lix * liy, h, k,
 		e = document.getElementById('ramka');
-	//przydzielanie wylosowanych obrazkow, do pol	
+	//przydzielanie wylosowanych obrazkow, do pol
 	var sf = setfields(lixy);
 	flips = 0;
 	lp = 0;
 	p = 0;
-	
-	for (c = 1; c <= lixy; c++) {
-		pole[c].obr = sf[c-1];
-		pole[c].stan = ZAKR;		
+
+	for (c = 0; c <= lixy; c++) {
+		pole[c].obr = sf[c];
+		pole[c].stan = ZAKR;
 		}
 	//wyswietlanie tablicy
 	e.innerHTML = null;
 	e.style.width = (lix * 118) + 10 + 'px';
 	e.style.height = (liy * 118) + 10 + 'px';
 	e.style.border = "1px solid white";
-	for (h = 1; h <= lixy; h++) {
+	for (h = 0; h < lixy; h++) {
 		e.innerHTML += '<img class="pole" id="p' + h + '" src="' + obrazek[0] + '" onclick="mainStart(' + h + ')"></img>';
 	}
 	ft = lixy; //ilosc elementow tablicy (do okreslenia ilosci par do odkrycia)
 }
 
 function setfields(ilosc_pol) {
-	
+
 	//ilosc_pol = Math.floor(ilosc_pol/2);
 	var pula = [], tabelka = [], wynik, b = 1;
 	//tworzenie zestawu obrazkow do wylosowania
@@ -90,17 +96,17 @@ function setfields(ilosc_pol) {
 		a1 = a1 + 2;
 		a2++;
 	}
-	//losowanie obrazka	
-	
+	//losowanie obrazka
+
 	for (ilosc_pol; ilosc_pol >= 1; ilosc_pol--) {
 		var los = Math.floor(Math.random() * ilosc_pol);
 		wynik = pula[los];
-		tabelka.splice(b++, 0, wynik); 
+		tabelka.splice(b++, 0, wynik);
 		//usuwanie wylosowanego obrazka z zestawu
 		pula.splice(los, 1);
 	}
 	//display
-	
+
 	return tabelka;
 }
 
@@ -134,7 +140,7 @@ function mainStart(nr) {
 function resetuj() {
         inicjuj_pola();
 	start_time = new Date().getTime(5);
-	document.getElementById("czas").innerHTML = 0;	
+	document.getElementById("czas").innerHTML = 0;
 	lp = 0; // wyzeruj licznik par dobrych
 	p = 0;
 	flips = 0;
@@ -153,8 +159,8 @@ function resetuj() {
 function testMatrycy() {
 	var b = 0, li;
 	if (!Number(ft)) { alert("ft error"); }
-	//szukanie odkrytych par - sprawdzanie czy dokladnie dwa pola sa odkryte 	
-	for (li = 1; li <= ft; li++) {
+	//szukanie odkrytych par - sprawdzanie czy dokladnie dwa pola sa odkryte
+	for (li = 0; li < ft; li++) {
 		if (pole[li].stan === ODKR) {
 			tem[++b] = li;
 		}
@@ -182,5 +188,5 @@ function testMatrycy() {
                 Math.floor((end_time - start_time)/1000) + " SEKUND";
             alert("Wynik: "+flips);
         }
-	
+
 }
