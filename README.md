@@ -11,4 +11,4 @@ Co brakuje:
 
 Status:
 ======
-[![Build Status](https://secure.travis-ci.org/lwiechec/jabberwocky.png?branch=master)](https://travis-ci.org/lwiechec/jabberwocky)
+(usunęte na chwilkę...)
