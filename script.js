@@ -64,7 +64,7 @@ function genTab(lix, liy) {
 	lp = 0;
 	p = 0;
 
-	for (c = 0; c <= lixy; c++) {
+	for (c = 0; c < lixy; c++) {
 		pole[c].obr = sf[c];
 		pole[c].stan = ZAKR;
 		}
