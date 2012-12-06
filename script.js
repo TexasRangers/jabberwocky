@@ -129,7 +129,7 @@ function zmiana(nr) {
 function mainStart(nr) {
 	if (koniec_testu === false) { return; }
 	zmiana(nr);
-	if (p === 2) {document.getElementById("czas").innerHTML
+	if (p === 2) {
 		koniec_testu = false;
 		flips++;
 		setTimeout("testMatrycy()", 400);
