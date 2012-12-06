@@ -126,11 +126,12 @@ function zmiana(nr) {
 	}
 }
 
+// reakcja na wybranie kafelka
 function mainStart(nr) {
-	if (koniec_testu === false) { return; }
-	zmiana(nr);
-	if (p === 2) {
-		koniec_testu = false;
+	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka
+	zmiana(nr); //...a jeśłi skończył, to odkryj kolejny kafelek
+	if (p === 2) {// jeśli dwa kafelki odkryte, wykonaj "testMatrycy"
+		
 		flips++;
 		setTimeout("testMatrycy()", 400);
 	}
@@ -157,6 +158,7 @@ function resetuj() {
 
 // sprawdzanie czy oba odkryte sa takie same
 function testMatrycy() {
+	koniec_testu = false; // oznaczenie początku testu
 	var b = 0, li;
 	if (!Number(ft)) { alert("ft error"); }
 	//szukanie odkrytych par - sprawdzanie czy dokladnie dwa pola sa odkryte
