@@ -130,11 +130,12 @@ function zmiana(nr) {
 function mainStart(nr) {
 	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka
 	zmiana(nr); //...a jeśłi skończył, to odkryj kolejny kafelek
+	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
 	if (p === 2) {// jeśli dwa kafelki odkryte, wykonaj "testMatrycy"
 		
-		flips++;
+		
 		setTimeout("testMatrycy()", 400);
-	}
+	};
 }
 
 
