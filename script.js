@@ -15,9 +15,6 @@ var p = 0;// licznik odkrytych pojedynczych pol
 // tablica z obrazkami
 var obrazek = inicjuj_obrazki();
 
-// zmienne przechowujące czas
-var start_time, end_time;
-
 // stałe definiujące czy karta jest zakryta czy odkryta
 var ZAKR = "zakryty", ODKR = "odkryty";
 
@@ -141,8 +138,6 @@ function mainStart(nr) {
 
 function resetuj() {
         inicjuj_pola();
-	start_time = new Date().getTime(5);
-	document.getElementById("czas").innerHTML = 0;
 	lp = 0; // wyzeruj licznik par dobrych
 	p = 0;
 	flips = 0;
@@ -185,11 +180,6 @@ function testMatrycy() {
 	tem[2] = 0;
 	p = 0;
 	koniec_testu = true;
-	if (lp === Math.floor(ft/2)) {
-            end_time = new Date().getTime(5);
-            document.getElementById("czas").innerHTML =
-                Math.floor((end_time - start_time)/1000) + " SEKUND";
-            alert("Wynik: "+flips);
-        }
+	if (lp === Math.floor(ft/2)) { alert("Wynik: "+flips); }
 
 }
