@@ -73,7 +73,7 @@ input	{
 			width: 160px;
 			height: 30px;
 			padding: 5px;
-			display block;
+			display: block;
 			margin-right: auto;
 			margin-left: auto;
 			font: 28px monospace;
