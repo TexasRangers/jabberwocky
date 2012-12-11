@@ -125,9 +125,12 @@ function zmiana(nr) {
 
 // reakcja na wybranie kafelka
 function mainStart(nr) {
+	tajmer("start", "timer");
 	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka
+	//tajmer('start', 'timer'); //start tajmera	
 	zmiana(nr); //...a jeśłi skończył, to odkryj kolejny kafelek
 	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
+	if (p>2) alert("ooooooooo");
 	if (p === 2) {// jeśli dwa kafelki odkryte, wykonaj "testMatrycy"
 		
 		
@@ -137,7 +140,7 @@ function mainStart(nr) {
 
 
 function resetuj() {
-        inicjuj_pola();
+  inicjuj_pola();
 	lp = 0; // wyzeruj licznik par dobrych
 	p = 0;
 	flips = 0;
@@ -162,8 +165,8 @@ function testMatrycy() {
 		if (pole[li].stan === ODKR) {
 			tem[++b] = li;
 		}
-	}
-	// test zgodnosci odkrytych pol
+	}  
+	// test zgodnosci odkrytych pol  
 	if (pole[tem[1]].obr === pole[tem[2]].obr) {
 		document.getElementById("p" + tem[1]).style.visibility = "hidden";
 		pole[tem[1]].stan = ZAKR;
@@ -178,8 +181,38 @@ function testMatrycy() {
 	}
 	tem[1] = 0;
 	tem[2] = 0;
-	p = 0;
-	koniec_testu = true;
-	if (lp === Math.floor(ft/2)) { alert("Wynik: "+flips); }
+	p = 0; 
+	koniec_testu = true;  
+	if (lp === Math.floor(ft/2)) { alert("Wynik: "+flips+" flipsów"+"\nCzas: "+tajmer("stop")); }
+}
 
+// Timer
+function tajmer(stan, id)	{ //stan = "start" lub "stop", id = ID elementu HTML, w którym ma być umieszczony timer lub stan koncowy tajmera
+	this.prot; // protection lock - metoda dla clearInterval
+	this.t; // clearInterval wymaga metody (przy użyciu var t, zeruje licznik, ale nie zatrzymuje go - liczy od nowa)
+	this.exit; // wyjscie dla clearInterval (stop)
+	var place;
+	if	(arguments[1]) place = document.getElementById(id); // ustaw miejsce wyswietlania tajmera
+	var h1=0, h2=0, m1=0, m2=0, s1=0, s2=1; // hh-mm-ss
+	// START
+	if (stan=="start") {
+			if (this.prot) { return; }; // jesli tajmer nie zostal zatrzymany, nie uruchamiaj go kolejny raz
+			this.prot = true; // tajmer startuje
+			t = setInterval(	function() {
+													if	(s2>9)	{ s2=0; s1++;	};
+													if	(s1>5)	{ s1=0; m2++;	};
+													if	(m2>9)	{ m2=0; m1++;	};
+													if	(m1>5)	{	m1=0; h2++;	};
+													if	(h2>9)	{ h2=0; h1++;	};
+													var disp = ""+h1+h2+":"+m1+m2+":"+s1+s2; //layout zegara
+													place.textContent = disp;	//	update zegara	 w elemencie html
+													exit = disp; //zapamietanie stanu do wyslania w przypadku zatrzymania timera
+													s2++;	// sekunda do przodu	
+													}, 992); // wychodzi na to, silniki JS zawsze dodają kilka ms (jednowątkowośc long story :)))
+	};
+	// STOP
+	if (stan=="stop") {	clearInterval(t); //zatrzymuje licznik (czyli wartość zmiennej t)
+												this.prot=false; // protection lock wyłączony, można teraz ponownie uruchomic tajmer
+												return exit; }; // zwróc stan tajmera po jego zatrzymaniu
+	place.textContent = "00:00:00"; // reset zawartosci elementu html
 }
