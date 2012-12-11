@@ -110,30 +110,24 @@ function setfields(ilosc_pol) {
 
 // wybor pola
 function zmiana(nr) {
-	if (p === 2) {
-		return;
-	}
 	// zmiana statusu pola jesli zakryte
-	if (pole[nr].stan !==  ZAKR) { return;
-		} else {
 		var a = document.getElementById('p' + nr);
 		a.src = obrazek[pole[nr].obr];
 		pole[nr].stan = ODKR;
-		p++;
 	}
-}
+
 
 // reakcja na wybranie kafelka
 function mainStart(nr) {
+	if (pole[nr].stan === ODKR) { return; }; //nie reaguj na doubleclick tego samego
+	p++; //zwieksz ilosc odkrytych kafelków
+	if (p>2) { p=0; return; }; //jesli odkryte 2 obrazki, poczekaj 
 	tajmer("start", "timer");
-	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka
-	//tajmer('start', 'timer'); //start tajmera	
+	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka	
 	zmiana(nr); //...a jeśłi skończył, to odkryj kolejny kafelek
 	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
-	if (p>2) alert("ooooooooo");
+	
 	if (p === 2) {// jeśli dwa kafelki odkryte, wykonaj "testMatrycy"
-		
-		
 		setTimeout("testMatrycy()", 400);
 	};
 }
