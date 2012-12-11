@@ -126,8 +126,7 @@ function zmiana(nr) {
 // reakcja na wybranie kafelka
 function mainStart(nr) {
 	tajmer("start", "timer");
-	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka
-	//tajmer('start', 'timer'); //start tajmera	
+	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka	
 	zmiana(nr); //...a jeśłi skończył, to odkryj kolejny kafelek
 	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
 	if (p>2) alert("ooooooooo");
