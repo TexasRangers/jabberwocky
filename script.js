@@ -246,7 +246,7 @@ function tajmer(id)	{ // id = ID elementu HTML, w którym ma być umieszczony ti
     }
 
     /**
-     * prefiksuj liczbę zerem
+     * prefiksuj liczbę zerem, jeśli jest mniejsza niż 10.
      * @param liczba
      * @return jeśli liczba
      */
@@ -261,10 +261,8 @@ function tajmer(id)	{ // id = ID elementu HTML, w którym ma być umieszczony ti
      * startuj tajmera.
      */
     this.start = function() {
-	if (this.prot) { console.log("timer already started"); return; }; // jesli tajmer nie zostal zatrzymany, nie uruchamiaj go kolejny raz
+	if (this.prot) { return; }; // jesli tajmer nie zostal zatrzymany, nie uruchamiaj go kolejny raz
 
-        console.log("tajmer start");
-        
 	this.prot = true; // tajmer startuje
 	this.t = setInterval(	function() {
 	    if	(s>59)	{ s=0; m++; };
