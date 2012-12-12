@@ -215,7 +215,7 @@ function testMatrycy() {
  *
  * @param id ID elementu HTML gdzie ma być ustawiony
  */
-function tajmer(id)	{ // id = ID elementu HTML, w którym ma być umieszczony timer lub stan koncowy tajmera
+var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszczony timer lub stan koncowy tajmera
     this.prot = false; // protection lock - metoda dla clearInterval
     this.t = new Object(); // clearInterval wymaga metody (przy użyciu var t, zeruje licznik, ale nie zatrzymuje go - liczy od nowa)
     this.exit = new String(); // wyjscie dla clearInterval (stop)
