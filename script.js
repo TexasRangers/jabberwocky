@@ -204,7 +204,15 @@ function testMatrycy() {
  * timer.stop();
  * ...
  * </code>
- * a później łatwo zawołać: 
+ *
+ * a później łatwo zawołać:
+ *
+ * <code>
+ * timer.aktualny_czas();
+ * </code>
+ *
+ * żeby uzyskać string z czasem.
+ *
  * @param id ID elementu HTML gdzie ma być ustawiony
  */
 function tajmer(id)	{ // id = ID elementu HTML, w którym ma być umieszczony timer lub stan koncowy tajmera
