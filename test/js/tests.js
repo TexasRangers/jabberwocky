@@ -17,6 +17,6 @@ test( "czy inicjalizacja zmiennej 'pola[]' przebiegła poprawnie", function() {
 module("Tajmer");
 
 test( "odpowiednia wartość początkowa tajmera", function() {
-    var tajmer1 = new tajmer("nieistnieje");
+    var tajmer1 = new Tajmer("nieistnieje");
     equal(tajmer1.aktualny_czas(), "00:00:00");
 });
