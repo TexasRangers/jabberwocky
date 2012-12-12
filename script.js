@@ -138,10 +138,14 @@ function mainStart(nr) {
 	};
 }
 
-
 function resetuj() {
   inicjuj_pola();
-  tajmer = new tajmer("timer");
+  if(tajmer) {
+      tajmer.stop();
+  } else {
+      tajmer = new Tajmer("timer");      
+  }
+  
 	lp = 0; // wyzeruj licznik par dobrych
 	p = 0;
 	flips = 0;
