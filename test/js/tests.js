@@ -12,4 +12,11 @@ test( "czy inicjalizacja zmiennej 'pola[]' przebiegła poprawnie", function() {
       equal(pole[i].stan, "zakryty", "pole " + i + " nie jest zakryte");
       equal(pole[i].obr, 0, "pole " + i + " jest 'obrocone' (a nie powinno)");
     }
-})
+});
+
+module("Tajmer");
+
+test( "odpowiednia wartość początkowa tajmera", function() {
+    var tajmer1 = new tajmer("nieistnieje");
+    equal(tajmer1.aktualny_czas(), "00:00:00");
+});
