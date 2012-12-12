@@ -228,13 +228,13 @@ function tajmer(id)	{ // id = ID elementu HTML, w którym ma być umieszczony ti
     }
 
     // zmienne na sekundy, minuty i godziny
-    var h1=0, h2=0, m1=0, m2=0, s1=0, s2=1; // hh-mm-ss
+    var h=0, m=0, s=0; // hh-mm-ss
     
     /**
      * resetuj zawartość tajmera.
      */
     this.reset = function() {
-        h1=0, h2=0, m1=0, m2=0, s1=0, s2=1;
+        h=0, m=0, s=0;
     };
 
     /**
@@ -242,7 +242,19 @@ function tajmer(id)	{ // id = ID elementu HTML, w którym ma być umieszczony ti
      * @return string ze sformatowanym czasem
      */
     function formatuj_czas() {
-        return ""+h1+h2+":"+m1+m2+":"+s1+s2;        
+        return "" + fmt_liczbe(h) + ":" + fmt_liczbe(m) + ":" + fmt_liczbe(s);
+    }
+
+    /**
+     * prefiksuj liczbę zerem
+     * @param liczba
+     * @return jeśli liczba
+     */
+    function fmt_liczbe(liczba) {
+        if(liczba < 10) {
+            return "0" + liczba;
+        }
+        return "" + liczba;
     }
     
     /**
@@ -255,18 +267,16 @@ function tajmer(id)	{ // id = ID elementu HTML, w którym ma być umieszczony ti
         
 	this.prot = true; // tajmer startuje
 	this.t = setInterval(	function() {
-	    if	(s2>9)	{ s2=0; s1++;	};
-	    if	(s1>5)	{ s1=0; m2++;	};
-	    if	(m2>9)	{ m2=0; m1++;	};
-	    if	(m1>5)	{ m1=0; h2++;	};
-	    if	(h2>9)	{ h2=0; h1++;	};
+	    if	(s>59)	{ s=0; m++; };
+	    if	(m>59)	{ m=0; h++; };
+	    if	(h>99)	{ h=0; }; // tajmer zawinie się po 99:99:99
 	    disp = formatuj_czas(); //layout zegara
             if(place) {
 	        place.textContent = disp;	// update zegara w elemencie html                
             }
 
 	    exit = disp; //zapamietanie stanu do wyslania w przypadku zatrzymania timera
-	    s2++;	// sekunda do przodu
+	    s++;	// sekunda do przodu
 	}, 992); // wychodzi na to, silniki JS zawsze dodają kilka ms (jednowątkowośc long story :)))
     };
 
