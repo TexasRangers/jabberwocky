@@ -21,6 +21,9 @@ var ZAKR = "zakryty", ODKR = "odkryty";
 // USTAW OBRAZKI
 var pole = inicjuj_pola();
 
+// zmienna globalna na tajmer
+var tajmer;
+
 /**
  * inicjuj pola.
  * @return poczatkowy stan pol (wszystkie zakryte)
@@ -122,7 +125,7 @@ function mainStart(nr) {
 	if (pole[nr].stan === ODKR) { return; }; //nie reaguj na doubleclick tego samego
 	p++; //zwieksz ilosc odkrytych kafelków
 	if (p>2) { p=0; return; }; //jesli odkryte 2 obrazki, poczekaj 
-	tajmer("start", "timer");
+	tajmer.start();  // upewnij się że tajmer jest zastartowany
 	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka	
 	zmiana(nr); //...a jeśłi skończył, to odkryj kolejny kafelek
 	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
@@ -132,9 +135,14 @@ function mainStart(nr) {
 	};
 }
 
-
 function resetuj() {
   inicjuj_pola();
+  if(tajmer) {
+      tajmer.stop();
+  } else {
+      tajmer = new Tajmer("timer");      
+  }
+  
 	lp = 0; // wyzeruj licznik par dobrych
 	p = 0;
 	flips = 0;
@@ -176,37 +184,122 @@ function testMatrycy() {
 	tem[1] = 0;
 	tem[2] = 0;
 	p = 0; 
-	koniec_testu = true;  
-	if (lp === Math.floor(ft/2)) { alert("Wynik: "+flips+" flipsów"+"\nCzas: "+tajmer("stop")); }
+	koniec_testu = true;
+
+    // gracz wygrał!
+	if (lp === Math.floor(ft/2)) {
+            tajmer.stop();
+            alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ tajmer.aktualny_czas());
+        }
 }
 
-// Timer
-function tajmer(stan, id)	{ //stan = "start" lub "stop", id = ID elementu HTML, w którym ma być umieszczony timer lub stan koncowy tajmera
-	this.prot; // protection lock - metoda dla clearInterval
-	this.t; // clearInterval wymaga metody (przy użyciu var t, zeruje licznik, ale nie zatrzymuje go - liczy od nowa)
-	this.exit; // wyjscie dla clearInterval (stop)
-	var place;
-	if	(arguments[1]) place = document.getElementById(id); // ustaw miejsce wyswietlania tajmera
-	var h1=0, h2=0, m1=0, m2=0, s1=0, s2=1; // hh-mm-ss
-	// START
-	if (stan=="start") {
-			if (this.prot) { return; }; // jesli tajmer nie zostal zatrzymany, nie uruchamiaj go kolejny raz
-			this.prot = true; // tajmer startuje
-			t = setInterval(	function() {
-													if	(s2>9)	{ s2=0; s1++;	};
-													if	(s1>5)	{ s1=0; m2++;	};
-													if	(m2>9)	{ m2=0; m1++;	};
-													if	(m1>5)	{	m1=0; h2++;	};
-													if	(h2>9)	{ h2=0; h1++;	};
-													var disp = ""+h1+h2+":"+m1+m2+":"+s1+s2; //layout zegara
-													place.textContent = disp;	//	update zegara	 w elemencie html
-													exit = disp; //zapamietanie stanu do wyslania w przypadku zatrzymania timera
-													s2++;	// sekunda do przodu	
-													}, 992); // wychodzi na to, silniki JS zawsze dodają kilka ms (jednowątkowośc long story :)))
-	};
-	// STOP
-	if (stan=="stop") {	clearInterval(t); //zatrzymuje licznik (czyli wartość zmiennej t)
-												this.prot=false; // protection lock wyłączony, można teraz ponownie uruchomic tajmer
-												return exit; }; // zwróc stan tajmera po jego zatrzymaniu
-	place.textContent = "00:00:00"; // reset zawartosci elementu html
+
+/**
+ * 'Klasa' tajmera. Sposób użycia:
+ *
+ * <code>
+ * var timer = new Timer("timerid");
+ * ...
+ * timer.start();
+ * ...
+ * timer.stop();
+ * ...
+ * </code>
+ *
+ * a później łatwo zawołać:
+ *
+ * <code>
+ * timer.aktualny_czas();
+ * </code>
+ *
+ * żeby uzyskać string z czasem.
+ *
+ * @param id ID elementu HTML gdzie ma być ustawiony
+ */
+var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszczony timer lub stan koncowy tajmera
+    this.prot = false; // protection lock - metoda dla clearInterval
+    this.t = new Object(); // clearInterval wymaga metody (przy użyciu var t, zeruje licznik, ale nie zatrzymuje go - liczy od nowa)
+    this.exit = new String(); // wyjscie dla clearInterval (stop)
+
+    var place = document.getElementById(id); // ustaw miejsce wyswietlania tajmera
+    var disp;
+
+    if(!place) {
+        console.log("UWAGA: Nie udało odnaleźć elementu z id='" + id + "' na stronie!");
+    }
+
+    // zmienne na sekundy, minuty i godziny
+    var h=0, m=0, s=0; // hh-mm-ss
+    
+    /**
+     * resetuj zawartość tajmera.
+     */
+    this.reset = function() {
+        h=0, m=0, s=0;
+    };
+
+    /**
+     * sformatuj czas z ilości godzin, minut i sekund na string.
+     * @return string ze sformatowanym czasem
+     */
+    function formatuj_czas() {
+        return "" + fmt_liczbe(h) + ":" + fmt_liczbe(m) + ":" + fmt_liczbe(s);
+    }
+
+    /**
+     * prefiksuj liczbę zerem, jeśli jest mniejsza niż 10.
+     * @param liczba
+     * @return jeśli liczba
+     */
+    function fmt_liczbe(liczba) {
+        if(liczba < 10) {
+            return "0" + liczba;
+        }
+        return "" + liczba;
+    }
+    
+    /**
+     * startuj tajmera.
+     */
+    this.start = function() {
+	if (this.prot) { return; }; // jesli tajmer nie zostal zatrzymany, nie uruchamiaj go kolejny raz
+
+	this.prot = true; // tajmer startuje
+	this.t = setInterval(	function() {
+	    if	(s>59)	{ s=0; m++; };
+	    if	(m>59)	{ m=0; h++; };
+	    if	(h>99)	{ h=0; }; // tajmer zawinie się po 99:99:99
+	    disp = formatuj_czas(); //layout zegara
+            if(place) {
+	        place.textContent = disp;	// update zegara w elemencie html                
+            }
+
+	    exit = disp; //zapamietanie stanu do wyslania w przypadku zatrzymania timera
+	    s++;	// sekunda do przodu
+	}, 992); // wychodzi na to, silniki JS zawsze dodają kilka ms (jednowątkowośc long story :)))
+    };
+
+    /**
+     * stopuj tajmera.
+     */
+    this.stop = function() {
+        clearInterval(this.t); //zatrzymuje licznik (czyli wartość zmiennej t)
+	this.prot=false; // protection lock wyłączony, można teraz ponownie uruchomic tajmer
+	return this.exit;
+    }; 
+
+    /**
+     * zwróć aktualną wartość tajmera (sformatowaną).
+     * @return 
+     */
+    this.aktualny_czas = function() {
+        return formatuj_czas();
+    };
+
+    // inicjalizacja objektu
+    if(place) {
+        place.textContent = formatuj_czas(); // reset zawartosci elementu html
+    }
+
+
 }
