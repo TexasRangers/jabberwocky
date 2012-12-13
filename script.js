@@ -136,12 +136,14 @@ function mainStart(nr) {
 }
 
 function resetuj() {
-  inicjuj_pola();
-  if(tajmer) {
-      tajmer.stop();
-  } else {
-      tajmer = new Tajmer("timer");      
-  }
+
+    inicjuj_pola();
+    if(tajmer) {
+        tajmer.stop();
+        tajmer.reset();
+    } else {
+        tajmer = new Tajmer("timer");      
+    }
   
 	lp = 0; // wyzeruj licznik par dobrych
 	p = 0;
@@ -229,13 +231,16 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
     }
 
     // zmienne na sekundy, minuty i godziny
-    var h=0, m=0, s=0; // hh-mm-ss
+    var h=0, m=0, s=0; 
     
     /**
      * resetuj zawartość tajmera.
      */
     this.reset = function() {
         h=0, m=0, s=0;
+        if(place) {
+            place.textContent = formatuj_czas();
+        };
     };
 
     /**
@@ -296,10 +301,7 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
         return formatuj_czas();
     };
 
-    // inicjalizacja objektu
-    if(place) {
-        place.textContent = formatuj_czas(); // reset zawartosci elementu html
-    }
+    // ...i na początek zresetuj tajmer
+    this.reset();
 
-
-}
+};
