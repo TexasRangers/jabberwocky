@@ -159,9 +159,7 @@ function resetuj() {
 // sprawdzanie czy oba odkryte sa takie same
 function testMatrycy() {
 
-    var tem = [];// zmienna tymczasowa - przechowuje pary do porownania
-    tem[1] = 0;
-    tem[2] = 0;
+    var tem = [0,0];// zmienna tymczasowa - przechowuje pary do porownania
 
     koniec_testu = false; // oznaczenie początku testu
 	var b = 0, li;
@@ -169,24 +167,23 @@ function testMatrycy() {
 	//szukanie odkrytych par - sprawdzanie czy dokladnie dwa pola sa odkryte
 	for (li = 0; li < ft; li++) {
 		if (pole[li].stan === ODKR) {
-			tem[++b] = li;
+			tem[b++] = li;
 		}
 	}  
 	// test zgodnosci odkrytych pol  
-	if (pole[tem[1]].obr === pole[tem[2]].obr) {
+	if (pole[tem[0]].obr === pole[tem[1]].obr) {
+		document.getElementById("p" + tem[0]).style.visibility = "hidden";
+		pole[tem[0]].stan = ZAKR;
 		document.getElementById("p" + tem[1]).style.visibility = "hidden";
 		pole[tem[1]].stan = ZAKR;
-		document.getElementById("p" + tem[2]).style.visibility = "hidden";
-		pole[tem[2]].stan = ZAKR;
 		lp++;
 	} else {
+		document.getElementById("p" + tem[0]).src = obrazek[0];
+		pole[tem[0]].stan = ZAKR;
 		document.getElementById("p" + tem[1]).src = obrazek[0];
 		pole[tem[1]].stan = ZAKR;
-		document.getElementById("p" + tem[2]).src = obrazek[0];
-		pole[tem[2]].stan = ZAKR;
 	}
-	tem[1] = 0;
-	tem[2] = 0;
+
 	p = 0; 
 	koniec_testu = true;
 
