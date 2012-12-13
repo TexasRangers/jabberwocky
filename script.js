@@ -147,7 +147,7 @@ function resetuj() {
 	flips = 0;
 	if (ft===0) return;
 	var i;
-	for (i = 1; i <= ft; i++) {
+	for (i = 0; i < ft; i++) {
 		document.getElementById("p" + i).style.visibility = "visible";
 		document.getElementById("p" + i).src = obrazek[0];
 		pole[i].stan = ZAKR;
