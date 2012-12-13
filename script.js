@@ -4,9 +4,6 @@
 
 var lp = 0;// licznik par dobrych
 var ft = 0;// suma par
-var tem = [];// zmienna tymczasowa - przechowuje pary do porownania
-tem[1] = 0;
-tem[2] = 0;
 var koniec_testu = true;
 var flips = 0; //licznik prob
 
@@ -161,7 +158,12 @@ function resetuj() {
 
 // sprawdzanie czy oba odkryte sa takie same
 function testMatrycy() {
-	koniec_testu = false; // oznaczenie początku testu
+
+    var tem = [];// zmienna tymczasowa - przechowuje pary do porownania
+    tem[1] = 0;
+    tem[2] = 0;
+
+    koniec_testu = false; // oznaczenie początku testu
 	var b = 0, li;
 	if (!Number(ft)) { alert("ft error"); }
 	//szukanie odkrytych par - sprawdzanie czy dokladnie dwa pola sa odkryte
