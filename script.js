@@ -127,7 +127,7 @@ function mainStart(nr) {
 	if (p>2) { p=0; return; }; //jesli odkryte 2 obrazki, poczekaj 
 	tajmer.start();  // upewnij się że tajmer jest zastartowany
 	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka	
-	zmiana(nr); //...a jeśłi skończył, to odkryj kolejny kafelek
+	zmiana(nr); //...a jeśli skończył, to odkryj kolejny kafelek
 	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
 	
 	if (p === 2) {// jeśli dwa kafelki odkryte, wykonaj "testMatrycy"
