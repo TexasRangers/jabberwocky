@@ -47,7 +47,7 @@ function inicjuj_obrazki() {
     for(var i = 1; i <= 14; i++) {
         obrazek[i] = kat + i + ".jpeg";
     }
-
+			
     return obrazek;
 }
 
@@ -78,32 +78,33 @@ function genTab(lix, liy) {
 
 function setfields(ilosc_pol) {
 
-	//ilosc_pol = Math.floor(ilosc_pol/2);
-	var pula = [], tabelka = [], wynik, b = 1;
+	var pulaStart = [], pula = [], tabelka = [], wynik, b = 1;
 	//tworzenie zestawu obrazkow do wylosowania
-	var a1 = 0,
-		a2 = 0;//numer obrazka
-	if (ilosc_pol%2) {
-		pula.splice(0, 0, 1);
-		a1 = a1 + 1;
-		a2 = a2 + 1;
-		}
-	while (a1 < (ilosc_pol-1)) {
-		pula.splice(a1, 0, a2+1, a2+1);
-		a1 = a1 + 2;
-		a2++;
+	for (var licznik = 0; licznik < 14; licznik++) { //pula startowa z wszystkimi numerami obrazkow - [1,2,3,4,... 13,14]
+			pulaStart[licznik] = licznik + 1;
 	}
-	//losowanie obrazka
-
+	
+	/*tworzenie zestawu przetasowanych par obrazkow - np. [3,3,9,9,1,1, ... 6,6,12,12],	
+		w ten sposob maszyna losująca obrazek (zmienna LOS), wylosuje kazdy obrazek dokladnie 2 razy
+	*/		
+	var poc = 0;
+	while (poc < ilosc_pol) {
+		var s1 = Math.floor(Math.random() * pulaStart.length);
+		pula[poc] = pulaStart[s1];
+		pula[poc + 1] = pula[poc];
+		pulaStart.splice(s1, 1);
+		poc = poc + 2;
+		}
+	//losowanie obrazka z puli par
 	for (ilosc_pol; ilosc_pol >= 1; ilosc_pol--) {
-		var los = Math.floor(Math.random() * ilosc_pol);
+		var los = Math.floor(Math.random() * pula.length);
 		wynik = pula[los];
-		tabelka.splice(b++, 0, wynik);
-		//usuwanie wylosowanego obrazka z zestawu
+		tabelka.splice(b, 0, wynik); //dodajemy "wynik" do koncowego zestawu (tabelki)  
+		b = b + 1;
+		//usuwanie wylosowanego obrazka z zestawu, aby nie losowac go ponownie, tym samym zmniejszamy rozmiar puli
 		pula.splice(los, 1);
 	}
 	//display
-
 	return tabelka;
 }
 
@@ -134,7 +135,7 @@ function mainStart(nr) {
 
 function resetuj() {
 
-    inicjuj_pola();
+    console.log("resetuj \n");
     if(tajmer) {
         tajmer.stop();
         tajmer.reset();
