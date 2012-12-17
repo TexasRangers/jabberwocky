@@ -121,13 +121,16 @@ function setfields(ilosc_pol) {
 }
 
 
-// wybor pola
-function zmiana(nr) {
-	// zmiana statusu pola jesli zakryte
-		var a = document.getElementById('p' + nr);
-		a.src = obrazek[pole[nr].obr];
-		pole[nr].stan = ODKR;
-	}
+/**
+ * zmień status pola na 'odkryte'.
+ * @param nr nr pola w zmiennej pole[]
+ */
+function odkryj_pole(nr) {
+    // zmiana statusu pola jesli zakryte
+    var a = document.getElementById('p' + nr);
+    a.src = obrazek[pole[nr].obr];
+    pole[nr].stan = ODKR;
+}
 
 
 // reakcja na wybranie kafelka
@@ -137,7 +140,7 @@ function mainStart(nr) {
 	if (p>2) { p=0; return; }; //jesli odkryte 2 obrazki, poczekaj 
 	tajmer.start();  // upewnij się że tajmer jest zastartowany
 	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka	
-	zmiana(nr); //...a jeśli skończył, to odkryj kolejny kafelek
+	odkryj_pole(nr); //...a jeśli skończył, to odkryj kolejny kafelek
 	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
 	
 	if (p === 2) {// jeśli dwa kafelki odkryte, wykonaj "testMatrycy"
