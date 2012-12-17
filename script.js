@@ -21,6 +21,15 @@ var pole = inicjuj_pola();
 // zmienna globalna na tajmer
 var tajmer;
 
+/*inicjacja wartosci dla metody mem funkcji proxyReset - to nie jest zmienna globalna,
+	to tzw. hoisting, deklarujemy i inicjujemy metodę wewnnętrzną funkcji, która jest
+	zdefiniowana gdzies dalej w kodzie. Sama funkcja moze zmieniać(i to robi) tę wartość,
+	jednak, żako,, że jest to metoda, dodatkowo zwracana przez tą funkcje, powoduje to
+	zachowanie jej wartosci, az do kolejnej zmiany wywolanej przez ta funkcje lub przez
+	inny obiekt (standardowo ta metoda jest read-write).
+*/
+proxyReset.mem = { mx: 0, my: 0 };
+
 /**
  * inicjuj pola.
  * @return poczatkowy stan pol (wszystkie zakryte)
@@ -53,8 +62,9 @@ function inicjuj_obrazki() {
 
 // generacja tablicy pól
 function genTab(lix, liy) {
+	proxyReset(lix,liy);
 	var lixy = lix * liy, h, k,
-		e = document.getElementById('ramka');
+	e = document.getElementById('ramka');
 	//przydzielanie wylosowanych obrazkow, do pol
 	var sf = setfields(lixy);
 	flips = 0;
@@ -63,7 +73,7 @@ function genTab(lix, liy) {
 
 	for (var c = 0; c < lixy; c++) {
 		pole[c].obr = sf[c];
-		pole[c].stan = ZAKR;
+		pole[c].stan = ZAKR; console.log("pole:"+c);
 		}
 	//wyswietlanie tablicy
 	e.innerHTML = null;
@@ -133,9 +143,19 @@ function mainStart(nr) {
 	};
 }
 
+/* tzw. posrednik - pozwala on pobrac, zapamietac, i przekazac rozmiary tablicy z jednej funkcji do drugiej
+	bez koniecznosci tworzenia zmiennej globalnej, a my potrzebujemy X i Y w funkcji resetuj(), do prawidlowego
+	wywolania genTab(), która robi wszystko - inicjuje, losuje i ustawia kafelki, gotowe do klikniecia.
+*/
+function proxyReset(lx,ly) {
+	proxyReset.mem.mx = lx;
+	proxyReset.mem.my = ly;
+	return proxyReset.mem;	
+	
+	}
+
 function resetuj() {
 
-    console.log("resetuj \n");
     if(tajmer) {
         tajmer.stop();
         tajmer.reset();
@@ -143,16 +163,8 @@ function resetuj() {
         tajmer = new Tajmer("timer");      
     }
   
-	lp = 0; // wyzeruj licznik par dobrych
-	p = 0;
-	flips = 0;
 	if (ft===0) return;
-	var i;
-	for (i = 0; i < ft; i++) {
-		document.getElementById("p" + i).style.visibility = "visible";
-		document.getElementById("p" + i).src = obrazek[0];
-		pole[i].stan = ZAKR;
-	}
+	genTab(proxyReset.mem.mx, proxyReset.mem.my);
 }
 
 
