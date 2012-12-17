@@ -63,6 +63,8 @@ function inicjuj_obrazki() {
 // generacja tablicy pól
 function genTab(lix, liy) {
 	proxyReset(lix,liy);
+	ft = 0; // zerowanie liczby kafelków
+	resetuj();
 	var lixy = lix * liy, h, k,
 	e = document.getElementById('ramka');
 	//przydzielanie wylosowanych obrazkow, do pol
@@ -151,7 +153,7 @@ function mainStart(nr) {
 function proxyReset(lx,ly) {
 	proxyReset.mem.mx = lx;
 	proxyReset.mem.my = ly;
-	return proxyReset.mem;	
+	return proxyReset.mem;	//zwraca obiekt zawierający wymiary matrycy z obrazkami
 }
 
 function resetuj() {
@@ -164,6 +166,10 @@ function resetuj() {
     }
   
 	if (ft===0) return;
+	/* generujemy ponownie tablice (automatycznie resetujac odpowiednie zmienne),
+     przekazując do genTab-a zmienne mx i my , wczesniej ustawione w obiekcie .mem, w funkcji
+     proxyReset. Zmienne te są ustawiane za pomoca wywołania tej funkcji w genTab().
+  */
 	genTab(proxyReset.mem.mx, proxyReset.mem.my);
 }
 
@@ -204,6 +210,7 @@ function testMatrycy() {
 	if (lp === Math.floor(ft/2)) {
             tajmer.stop();
             alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ tajmer.aktualny_czas());
+            resetuj(); //resetuj czas i generuj nową tablice o tym samym rozmiarze (domyslnie)
         }
 }
 
