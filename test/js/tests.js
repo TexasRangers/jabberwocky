@@ -20,3 +20,10 @@ test( "odpowiednia wartość początkowa tajmera", function() {
     var tajmer1 = new Tajmer("nieistnieje");
     equal(tajmer1.aktualny_czas(), "00:00:00");
 });
+
+module("Losowanie kafelków");
+
+test ("czy funkcja 'setfield()' inicjalizuje się poprawnie", function(){
+    var foo = setfields(10);
+    strictEqual(Object.prototype.toString.call(foo), '[object Array]', "funkcja powinna zwrócić array");
+});
