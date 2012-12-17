@@ -86,6 +86,7 @@ function genTab(lix, liy) {
 	ft = lixy; //ilosc elementow tablicy (do okreslenia ilosci par do odkrycia)
 }
 
+// funkcja zwraca gotową tabelke z wylosowanymi obrazkami potrzebną dla zmiennej SF z genTab()
 function setfields(ilosc_pol) {
 
 	var pulaStart = [], pula = [], tabelka = [], wynik, b = 1;
@@ -102,7 +103,7 @@ function setfields(ilosc_pol) {
 		var s1 = Math.floor(Math.random() * pulaStart.length);
 		pula[poc] = pulaStart[s1];
 		pula[poc + 1] = pula[poc];
-		pulaStart.splice(s1, 1);
+		pulaStart.splice(s1, 1); //usun wylosowany obrazek z pulaStart
 		poc = poc + 2;
 		}
 	//losowanie obrazka z puli par
