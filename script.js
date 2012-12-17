@@ -98,15 +98,14 @@ function setfields(ilosc_pol) {
 	/*tworzenie zestawu przetasowanych par obrazkow - np. [3,3,9,9,1,1, ... 6,6,12,12],	
 		w ten sposob maszyna losująca obrazek (zmienna LOS), wylosuje kazdy obrazek dokladnie 2 razy
 	*/		
-	var poc = 0;
-	while (poc < ilosc_pol) {
-		var s1 = Math.floor(Math.random() * pulaStart.length);
-		pula[poc] = pulaStart[s1];
-		pula[poc + 1] = pula[poc];
-		pulaStart.splice(s1, 1); //usun wylosowany obrazek z pulaStart
-		poc = poc + 2;
-		}
-	//losowanie obrazka z puli par
+        for(var poc=0; poc<ilosc_pol; poc = poc + 2) {            
+	    var s1 = Math.floor(Math.random() * pulaStart.length);
+	    pula[poc] = pulaStart[s1];
+	    pula[poc + 1] = pula[poc];
+	    pulaStart.splice(s1, 1); //usun wylosowany obrazek z pulaStart
+	}
+
+        //losowanie obrazka z puli par
 	for (ilosc_pol; ilosc_pol >= 1; ilosc_pol--) {
 		var los = Math.floor(Math.random() * pula.length);
 		wynik = pula[los];
