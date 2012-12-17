@@ -75,7 +75,7 @@ function genTab(lix, liy) {
 
 	for (var c = 0; c < lixy; c++) {
 		pole[c].obr = sf[c];
-		pole[c].stan = ZAKR; console.log("pole:"+c);
+		pole[c].stan = ZAKR;
 		}
 	//wyswietlanie tablicy
 	e.innerHTML = null;
@@ -252,13 +252,13 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
     }
 
     // zmienne na sekundy, minuty i godziny
-    var h=0, m=0, s=0; 
+    var h=0, m=0, s=0;
     
     /**
      * resetuj zawartość tajmera.
      */
     this.reset = function() {
-        h=0, m=0, s=0;
+        h=0, m=0, s=1;
         if(place) {
             place.textContent = formatuj_czas();
         };
