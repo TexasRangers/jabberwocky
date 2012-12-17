@@ -21,6 +21,15 @@ var pole = inicjuj_pola();
 // zmienna globalna na tajmer
 var tajmer;
 
+/*inicjacja wartosci dla metody mem funkcji proxyReset - to nie jest zmienna globalna,
+	to tzw. hoisting, deklarujemy i inicjujemy metodę wewnnętrzną funkcji, która jest
+	zdefiniowana gdzies dalej w kodzie. Sama funkcja moze zmieniać(i to robi) tę wartość,
+	jednak, żako,, że jest to metoda, dodatkowo zwracana przez tą funkcje, powoduje to
+	zachowanie jej wartosci, az do kolejnej zmiany wywolanej przez ta funkcje lub przez
+	inny obiekt (standardowo ta metoda jest read-write).
+*/
+proxyReset.mem = { mx: 0, my: 0 };
+
 /**
  * inicjuj pola.
  * @return poczatkowy stan pol (wszystkie zakryte)
@@ -47,14 +56,17 @@ function inicjuj_obrazki() {
     for(var i = 1; i <= 14; i++) {
         obrazek[i] = kat + i + ".jpeg";
     }
-
+			
     return obrazek;
 }
 
 // generacja tablicy pól
 function genTab(lix, liy) {
+	proxyReset(lix,liy);
+	ft = 0; // zerowanie liczby kafelków
+	resetuj();
 	var lixy = lix * liy, h, k,
-		e = document.getElementById('ramka');
+	e = document.getElementById('ramka');
 	//przydzielanie wylosowanych obrazkow, do pol
 	var sf = setfields(lixy);
 	flips = 0;
@@ -76,45 +88,49 @@ function genTab(lix, liy) {
 	ft = lixy; //ilosc elementow tablicy (do okreslenia ilosci par do odkrycia)
 }
 
+// funkcja zwraca gotową tabelke z wylosowanymi obrazkami potrzebną dla zmiennej SF z genTab()
 function setfields(ilosc_pol) {
 
-	//ilosc_pol = Math.floor(ilosc_pol/2);
-	var pula = [], tabelka = [], wynik, b = 1;
+	var pulaStart = [], pula = [], tabelka = [], wynik, b = 1;
 	//tworzenie zestawu obrazkow do wylosowania
-	var a1 = 0,
-		a2 = 0;//numer obrazka
-	if (ilosc_pol%2) {
-		pula.splice(0, 0, 1);
-		a1 = a1 + 1;
-		a2 = a2 + 1;
-		}
-	while (a1 < (ilosc_pol-1)) {
-		pula.splice(a1, 0, a2+1, a2+1);
-		a1 = a1 + 2;
-		a2++;
+	for (var licznik = 0; licznik < 14; licznik++) { //pula startowa z wszystkimi numerami obrazkow - [1,2,3,4,... 13,14]
+			pulaStart[licznik] = licznik + 1;
 	}
-	//losowanie obrazka
+	
+	/*tworzenie zestawu przetasowanych par obrazkow - np. [3,3,9,9,1,1, ... 6,6,12,12],	
+		w ten sposob maszyna losująca obrazek (zmienna LOS), wylosuje kazdy obrazek dokladnie 2 razy
+	*/		
+        for(var poc=0; poc<ilosc_pol; poc = poc + 2) {            
+	    var s1 = Math.floor(Math.random() * pulaStart.length);
+	    pula[poc] = pulaStart[s1];
+	    pula[poc + 1] = pula[poc];
+	    pulaStart.splice(s1, 1); //usun wylosowany obrazek z pulaStart
+	}
 
+        //losowanie obrazka z puli par
 	for (ilosc_pol; ilosc_pol >= 1; ilosc_pol--) {
-		var los = Math.floor(Math.random() * ilosc_pol);
+		var los = Math.floor(Math.random() * pula.length);
 		wynik = pula[los];
-		tabelka.splice(b++, 0, wynik);
-		//usuwanie wylosowanego obrazka z zestawu
+		tabelka.splice(b, 0, wynik); //dodajemy "wynik" do koncowego zestawu (tabelki)  
+		b = b + 1;
+		//usuwanie wylosowanego obrazka z zestawu, aby nie losowac go ponownie, tym samym zmniejszamy rozmiar puli
 		pula.splice(los, 1);
 	}
 	//display
-
 	return tabelka;
 }
 
 
-// wybor pola
-function zmiana(nr) {
-	// zmiana statusu pola jesli zakryte
-		var a = document.getElementById('p' + nr);
-		a.src = obrazek[pole[nr].obr];
-		pole[nr].stan = ODKR;
-	}
+/**
+ * zmień status pola na 'odkryte'.
+ * @param nr nr pola w zmiennej pole[]
+ */
+function odkryj_pole(nr) {
+    // zmiana statusu pola jesli zakryte
+    var a = document.getElementById('p' + nr);
+    a.src = obrazek[pole[nr].obr];
+    pole[nr].stan = ODKR;
+}
 
 
 // reakcja na wybranie kafelka
@@ -124,7 +140,7 @@ function mainStart(nr) {
 	if (p>2) { p=0; return; }; //jesli odkryte 2 obrazki, poczekaj 
 	tajmer.start();  // upewnij się że tajmer jest zastartowany
 	if (koniec_testu === false) { return; } //jeśli "testMatrycy" nie skończył, opuść funkcje bez odkrywania kolejnego kafelka	
-	zmiana(nr); //...a jeśli skończył, to odkryj kolejny kafelek
+	odkryj_pole(nr); //...a jeśli skończył, to odkryj kolejny kafelek
 	flips++; //zwiększ ilość pojedynczych "odkryć" kafelków (część punktacji)
 	
 	if (p === 2) {// jeśli dwa kafelki odkryte, wykonaj "testMatrycy"
@@ -132,9 +148,18 @@ function mainStart(nr) {
 	};
 }
 
+/* tzw. posrednik - pozwala on pobrac, zapamietac, i przekazac rozmiary tablicy z jednej funkcji do drugiej
+	bez koniecznosci tworzenia zmiennej globalnej, a my potrzebujemy X i Y w funkcji resetuj(), do prawidlowego
+	wywolania genTab(), która robi wszystko - inicjuje, losuje i ustawia kafelki, gotowe do klikniecia.
+*/
+function proxyReset(lx,ly) {
+	proxyReset.mem.mx = lx;
+	proxyReset.mem.my = ly;
+	return proxyReset.mem;	//zwraca obiekt zawierający wymiary matrycy z obrazkami
+}
+
 function resetuj() {
 
-    inicjuj_pola();
     if(tajmer) {
         tajmer.stop();
         tajmer.reset();
@@ -142,16 +167,12 @@ function resetuj() {
         tajmer = new Tajmer("timer");      
     }
   
-	lp = 0; // wyzeruj licznik par dobrych
-	p = 0;
-	flips = 0;
 	if (ft===0) return;
-	var i;
-	for (i = 0; i < ft; i++) {
-		document.getElementById("p" + i).style.visibility = "visible";
-		document.getElementById("p" + i).src = obrazek[0];
-		pole[i].stan = ZAKR;
-	}
+	/* generujemy ponownie tablice (automatycznie resetujac odpowiednie zmienne),
+     przekazując do genTab-a zmienne mx i my , wczesniej ustawione w obiekcie .mem, w funkcji
+     proxyReset. Zmienne te są ustawiane za pomoca wywołania tej funkcji w genTab().
+  */
+	genTab(proxyReset.mem.mx, proxyReset.mem.my);
 }
 
 
@@ -191,6 +212,7 @@ function testMatrycy() {
 	if (lp === Math.floor(ft/2)) {
             tajmer.stop();
             alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ tajmer.aktualny_czas());
+            resetuj(); //resetuj czas i generuj nową tablice o tym samym rozmiarze (domyslnie)
         }
 }
 
@@ -230,7 +252,7 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
     }
 
     // zmienne na sekundy, minuty i godziny
-    var h=0, m=0, s=0; 
+    var h=0, m=0, s=0;
     
     /**
      * resetuj zawartość tajmera.
@@ -267,9 +289,9 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
      */
     this.start = function() {
 	if (this.prot) { return; }; // jesli tajmer nie zostal zatrzymany, nie uruchamiaj go kolejny raz
-
 	this.prot = true; // tajmer startuje
 	this.t = setInterval(	function() {
+			 s++; // sekunda do przodu
 	    if	(s>59)	{ s=0; m++; };
 	    if	(m>59)	{ m=0; h++; };
 	    if	(h>99)	{ h=0; }; // tajmer zawinie się po 99:99:99
@@ -277,9 +299,7 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
             if(place) {
 	        place.textContent = disp;	// update zegara w elemencie html                
             }
-
 	    exit = disp; //zapamietanie stanu do wyslania w przypadku zatrzymania timera
-	    s++;	// sekunda do przodu
 	}, 992); // wychodzi na to, silniki JS zawsze dodają kilka ms (jednowątkowośc long story :)))
     };
 
