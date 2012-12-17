@@ -151,8 +151,7 @@ function proxyReset(lx,ly) {
 	proxyReset.mem.mx = lx;
 	proxyReset.mem.my = ly;
 	return proxyReset.mem;	
-	
-	}
+}
 
 function resetuj() {
 
