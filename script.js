@@ -88,13 +88,14 @@ function genTab(lix, liy) {
 	ft = lixy; //ilosc elementow tablicy (do okreslenia ilosci par do odkrycia)
 }
 
-// funkcja zwraca gotową tabelke z wylosowanymi obrazkami potrzebną dla zmiennej SF z genTab()
+// funkcja zwraca gotową tabelke z wylosowanymi indeksami obrazków potrzebną dla zmiennej SF z genTab()
 function setfields(ilosc_pol) {
 
 	var pulaStart = [], pula = [], tabelka = [], wynik, b = 1;
 	//tworzenie zestawu obrazkow do wylosowania
-	for (var licznik = 0; licznik < 14; licznik++) { //pula startowa z wszystkimi numerami obrazkow - [1,2,3,4,... 13,14]
-			pulaStart[licznik] = licznik + 1;
+        //pula startowa z wszystkimi numerami obrazkow - [1,2,3,4,... 13,14]
+        for (var licznik = 0; licznik < 14; licznik++) { 
+	    pulaStart[licznik] = licznik + 1;
 	}
 	
 	/*tworzenie zestawu przetasowanych par obrazkow - np. [3,3,9,9,1,1, ... 6,6,12,12],	
