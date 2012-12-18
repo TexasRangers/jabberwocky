@@ -77,6 +77,7 @@ function genTab(lix, liy) {
 	    pole[c].obr = sf[c];
 	    pole[c].stan = ZAKR; console.log("pole:"+c);
 	}
+    
 	//wyswietlanie tablicy
 	e.innerHTML = null;
 	e.style.width = (lix * 118) + 10 + 'px';
@@ -253,7 +254,7 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
     }
 
     // zmienne na sekundy, minuty i godziny
-    var h=0, m=0, s=0; 
+    var h=0, m=0, s=0;
     
     /**
      * resetuj zawartość tajmera.
@@ -290,9 +291,9 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
      */
     this.start = function() {
 	if (this.prot) { return; }; // jesli tajmer nie zostal zatrzymany, nie uruchamiaj go kolejny raz
-
 	this.prot = true; // tajmer startuje
 	this.t = setInterval(	function() {
+			 s++; // sekunda do przodu
 	    if	(s>59)	{ s=0; m++; };
 	    if	(m>59)	{ m=0; h++; };
 	    if	(h>99)	{ h=0; }; // tajmer zawinie się po 99:99:99
@@ -300,9 +301,7 @@ var Tajmer = function (id)	{ // id = ID elementu HTML, w którym ma być umieszc
             if(place) {
 	        place.textContent = disp;	// update zegara w elemencie html                
             }
-
 	    exit = disp; //zapamietanie stanu do wyslania w przypadku zatrzymania timera
-	    s++;	// sekunda do przodu
 	}, 992); // wychodzi na to, silniki JS zawsze dodają kilka ms (jednowątkowośc long story :)))
     };
 
