@@ -109,7 +109,7 @@ function setfields(ilosc_pol) {
 	}
 
         //losowanie obrazka z puli par
-	for (ilosc_pol; ilosc_pol >= 1; ilosc_pol--) {
+	for (var i = ilosc_pol; i >= 1; i--) {
 		var los = Math.floor(Math.random() * pula.length);
 		wynik = pula[los];
 		tabelka.splice(b, 0, wynik); //dodajemy "wynik" do koncowego zestawu (tabelki)  
