@@ -74,9 +74,9 @@ function genTab(lix, liy) {
 	p = 0;
 
 	for (var c = 0; c < lixy; c++) {
-		pole[c].obr = sf[c];
-		pole[c].stan = ZAKR; console.log("pole:"+c);
-		}
+	    pole[c].obr = sf[c];
+	    pole[c].stan = ZAKR; console.log("pole:"+c);
+	}
 	//wyswietlanie tablicy
 	e.innerHTML = null;
 	e.style.width = (lix * 118) + 10 + 'px';
