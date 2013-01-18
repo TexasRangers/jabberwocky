@@ -49,7 +49,7 @@ body	{
 			font-size: 20px;
 			text-align: center;
 			}
-			
+
 input	{			
 			width: 80px;
 			height: 40px;
@@ -90,9 +90,9 @@ input	{
 			width: 300px;
 			height: 430px;
 			border: 1px solid blue;
-			text-align: center;
+			text-align: center;	
 			}
-				
+			
 #zestawy	{
 			position: relative;
 			top: 20px;			
@@ -103,7 +103,7 @@ input	{
 			border: 1px solid pink;			
 			border-radius: 40px;
 			}
-			
+	
 #changeSet	{
 			display: block;
 			position: relative;
@@ -112,11 +112,11 @@ input	{
 			left: 10%;
 			width: 80px;
 			height: 40px;
-			float: left;		
-	}
+			float: left;
+			}
 
 /* POPAP */
-	
+
 #currentsetImage{
 			display: block;
 			position: relative;
@@ -126,7 +126,7 @@ input	{
 			border: 1px solid blue;
 			width: 70px;
 			height: 70px;
-			float: right;
+			float: right;			
 			}
 			
 #backgnd, #backgndShad	{
@@ -151,7 +151,7 @@ input	{
 			-moz-transition: opacity 0.3s ease-in;
 			-webkit-transition: opacity 0.3s ease-in;
 			}
-			
+				
 #popRama, #popRamaAfter	{
 			position: absolute;			
 			z-index: 3;	
@@ -175,7 +175,7 @@ input	{
 			opacity: 1;
 			width: 410px;
 			height: 480px;
-			background-color: black;
+			background-color: #3a7282;
 			padding: 5px;
 			-webkit-transition: all 0.3s ease-out;
 			-moz-transition: all 0.3s ease-out;
@@ -187,31 +187,29 @@ input	{
 			margin-right: auto;
 			padding: 5px;
 			height: 97%;
-			background-color: lightcoral;;
+			background-color: #3e899f;
 			opacity: 1;
 			}
 	
 #popikTop	{
 			position: relative;		
 			height: 70%;
-			background-color: fuchsia;
+			background-color: #42a1bc;
 			}
 	
 #popikBottom	{  
 			position: relative;
 			height: 30%;
-			background-color: pink;
+			background-color: #42a1bc;
 			text-align: center;
 			}
-
 
 .kwadracik		{
 			position: relative;
 			width: 80px;
 			height: 80px;
 			background-color: black;	
-			float: left;
-		
+			float: left;		
 			}
 		
 .zestaw		{
