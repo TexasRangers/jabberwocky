@@ -341,7 +341,29 @@ window.onload = function() {
     this.reset();
 
 	};
-
+	
+	/*	FUNKCJA ZWRACAJACA WYNIK (LICZBE PUNKTOW)
+	*		ARGUMENTY: 
+	*		lk - liczba prob (odkryc kafelkow)
+	*		czas - czas rozgrywki (STRING w formacie hh:mm:ss)
+	*		roztab - rozmiar tablicy (ilosc kafelkow)
+	*/
+	function wynik(lk, czas, roztab) {
+    var bonus = 0;
+    if (roztab%2 !==0)	{
+    	roztab = roztab - 1;
+    	bonus = bonus + (roztab*10);
+    }
+    var t = czas.split(":");
+    czas = (t[0] * 3600) + (t[1] * 60) + (t[2] * 1);
+    var minCzas = roztab/2
+    var pula = (roztab * minCzas * 10) + bonus;
+    var pktCzas = (czas - minCzas) * 5;
+    var pktKaf  = (lk - roztab) * 10;
+    var punkty = pula - pktCzas - pktKaf;
+    return punkty;
+	}
+	
 	// FUNKCJA AKTUALIZUJACA I WYSWIETLAJACA BIEZACY ZESTAW
 	function updateSetDisplay(zestaw)	{
 		console.log("updateSetDisplay");
