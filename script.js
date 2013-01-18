@@ -232,7 +232,8 @@ window.onload = function() {
     // gracz wygrał!
 		if (lp === Math.floor(ft/2)) {
             tajmer.stop();
-            alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ tajmer.aktualny_czas());
+            var ac = tajmer.aktualny_czas();
+            alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ ac + "\n\nPunkty: "+ wynik(flips, ac, ft));
             resetuj(); //resetuj czas i generuj nową tablice o tym samym rozmiarze (domyslnie)
     }
 	}
