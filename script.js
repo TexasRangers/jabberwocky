@@ -2,35 +2,12 @@
  * @author kelner
  */
 // WSZYSTKO MUSI ZOSTAC ZALADOWANE PO SPARSOWANIU HTML-A
-window.onload = function() {
-	updateSetDisplay.currentSet = 0;
-	updateSetDisplay();
-	buttonActions();
-	
-	// USTAWIANIE REAKCJI DLA PRZYCISKOW W MENU GLOWNYM
-	function buttonActions()	{
-		// przycisk zmiany zestawu
-		var		chSet= document.getElementById("changeSet");
-		chSet.addEventListener("click", function()	{ okno(updateSetDisplay); }, false);
-	
-		// przycisk RESTART
-		var restart = document.getElementById("resetuj");
-		restart.addEventListener("click", resetuj, false);
-	
-		// przyciski rozmiarow tablicy
-		var lista =	[ {rx: 3, ry: 4, elId: "34"},
-									{rx: 4, ry: 4, elId: "44"},
-									{rx: 4, ry: 5, elId: "45"},
-									{rx: 6, ry: 4, elId: "46"},
-									{rx: 3, ry: 5, elId: "35"},
-									{rx: 5, ry: 5, elId: "55"}
-								];
-		for (var l = 0; l<6; l++)	{
-		butId = document.getElementById(lista[l].elId);
-		butId.addEventListener("click", (function(s){ return function(){ genTab(lista[s].rx, lista[s].ry); }})(l), false);	
-		}
-		
+	window.onload = function() {		
+		updateSetDisplay();
+		buttonActions();
 	}
+	
+	updateSetDisplay.currentSet = 0;
 	var lp = 0;// licznik par dobrych
 	var ft = 0;// suma par
 	var koniec_testu = true;
@@ -57,6 +34,31 @@ window.onload = function() {
 		inny obiekt (standardowo ta metoda jest read-write).
 	*/
 	proxyReset.mem = { mx: 0, my: 0 };
+	// USTAWIANIE REAKCJI DLA PRZYCISKOW W MENU GLOWNYM
+	function buttonActions()	{
+		// przycisk zmiany zestawu
+		var		chSet= document.getElementById("changeSet");
+		chSet.addEventListener("click", function()	{ okno(updateSetDisplay); }, false);
+	
+		// przycisk RESTART
+		var restart = document.getElementById("resetuj");
+		restart.addEventListener("click", resetuj, false);
+	
+		// przyciski rozmiarow tablicy
+		var lista =	[ {rx: 3, ry: 4, elId: "34"},
+									{rx: 4, ry: 4, elId: "44"},
+									{rx: 4, ry: 5, elId: "45"},
+									{rx: 6, ry: 4, elId: "46"},
+									{rx: 3, ry: 5, elId: "35"},
+									{rx: 5, ry: 5, elId: "55"}
+								];
+		for (var l = 0; l<6; l++)	{
+		butId = document.getElementById(lista[l].elId);
+		butId.addEventListener("click", (function(s){ return function(){ genTab(lista[s].rx, lista[s].ry); }})(l), false);	
+		}
+		
+	}
+	
 
 	/**
  	* inicjuj pola.
@@ -368,7 +370,7 @@ window.onload = function() {
 	// FUNKCJA AKTUALIZUJACA I WYSWIETLAJACA BIEZACY ZESTAW
 	function updateSetDisplay(zestaw)	{
 		console.log("updateSetDisplay");
-		cs = document.getElementById("currentsetImage");
+		var cs = document.getElementById("currentsetImage");
 		if (zestaw === undefined) {
 			cs.src = "images/zestaw" + updateSetDisplay.currentSet + "/1.jpeg"; 
 			console.log("nie ma zestawu - odczyt updsetdis");
@@ -539,5 +541,5 @@ window.onload = function() {
 		}
 	}
 
-}
+
 
