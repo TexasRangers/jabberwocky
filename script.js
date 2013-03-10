@@ -2,11 +2,16 @@
  * @author kelner
  */
 // WSZYSTKO MUSI ZOSTAC ZALADOWANE PO SPARSOWANIU HTML-A
-	window.onload = function() {		
+	window.onload = function() {
 		updateSetDisplay();
 		buttonActions();
-	}
-	
+		
+		// Przygotowanie tablicy wynikow
+		var pla = document.getElementById("ranking");
+		var liRank = getRankList(); // POBIERA AKTUALNA BAZE DANYCH RANKINGU
+		displayScoreboard(pla, liRank);
+		}
+
 	updateSetDisplay.currentSet = 0;
 	var lp = 0;// licznik par dobrych
 	var ft = 0;// suma par
@@ -34,6 +39,7 @@
 		inny obiekt (standardowo ta metoda jest read-write).
 	*/
 	proxyReset.mem = { mx: 0, my: 0 };
+	
 	// USTAWIANIE REAKCJI DLA PRZYCISKOW W MENU GLOWNYM
 	function buttonActions()	{
 		// przycisk zmiany zestawu
@@ -53,10 +59,26 @@
 									{rx: 5, ry: 5, elId: "55"}
 								];
 		for (var l = 0; l<6; l++)	{
-		butId = document.getElementById(lista[l].elId);
+		var butId = document.getElementById(lista[l].elId);
 		butId.addEventListener("click", (function(s){ return function(){ genTab(lista[s].rx, lista[s].ry); }})(l), false);	
 		}
 		
+		// przyciski wyboru tablicy wynikow
+		var changeTabMinus = document.getElementById("selRankMinus");
+		changeTabMinus.addEventListener("click",
+																		function() {
+																		rankSet(false);
+																		var ls = getRankList(rankSet());
+																		displayScoreboard(document.getElementById("ranking"), ls);
+																		}, false);
+		
+		var changeTabPlus = document.getElementById("selRankPlus");
+		changeTabPlus.addEventListener("click",
+																		function() {
+																		rankSet(true);
+																		var ls = getRankList(rankSet());
+																		displayScoreboard(document.getElementById("ranking"), ls);
+																		}, false);
 	}
 	
 
@@ -235,7 +257,13 @@
 		if (lp === Math.floor(ft/2)) {
             tajmer.stop();
             var ac = tajmer.aktualny_czas();
-            alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ ac + "\n\nPunkty: "+ wynik(flips, ac, ft));
+            var w = wynik(flips, ac, ft);
+            alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ ac + "\n\nPunkty: " + w);
+            var imie = prompt("Podaj imie: ");
+            var lista_main = processBoard(w, getRankList(), imie);
+            var lista_spec = processBoard(w, getRankList(ft), imie);
+            updateRankList(lista_main, lista_spec, ft);
+            displayScoreboard(document.getElementById("ranking"), getRankList(rankSet()));    
             resetuj(); //resetuj czas i generuj nową tablice o tym samym rozmiarze (domyslnie)
     }
 	}
@@ -364,7 +392,7 @@
     var pktCzas = (czas - minCzas) * 5;
     var pktKaf  = (lk - roztab) * 10;
     var punkty = pula - pktCzas - pktKaf;
-    return punkty;
+    return ( punkty<0 ? 0 : punkty);
 	}
 	
 	// FUNKCJA AKTUALIZUJACA I WYSWIETLAJACA BIEZACY ZESTAW
@@ -540,6 +568,94 @@
 			document.body.removeChild(cien);
 		}
 	}
+	
+	// zwraca ranking w postaci tablicy
+	function getRankList(nl) {
+		if (!nl) nl = 0 // defaultowo tablica wynikow mieszana (wyniki z roznych poziomow)
+		var lista = [];
+		var li = 1;
+		while (window.localStorage.getItem("rank"+nl+"_score_" + li) !== null) {
+			var rn = window.localStorage.getItem("rank"+nl+"_name_" + li);
+			var rs = window.localStorage.getItem("rank"+nl+"_score_" + li)
+			lista.push([rn, rs]);
+			li++;
+		}
+		return lista;
+	}
 
+	// POBIERA WYNIK, USTAWIA IMIE GRACZA, SORTUJE TABELE WYNIKOW I ZWRACA GOTOWY RANKING
+	
+	function processBoard (score, lista, imie) {
+		var indeks = lista.length > 10 ? (lista = lista.slice(0, 10), lista.length - 1 ) : lista.length - 1;
+		if (indeks === 9 && score <= lista[9][1] ) { return lista; }
+		if (!imie) imie = "anominus";
+		indeks < 9 ? lista.push([imie, score]) : lista[9] = [imie, score];
+		lista.sort( function(a, b)
+												{ a[1] = parseInt(a[1], 10);
+													b[1] = parseInt(b[1], 10);
+													return (a[1] > b[1] ? -1 : (a[1] < b[1] ? 1 : 0) ); } );
+		return lista;
+	}
 
-
+	// FUNKCJA WYSWIETLA TABLICE WYNIKOW
+	
+	function displayScoreboard (elemID, lista) {
+		// czyszczenie tabelki z lista wynikow
+		for (var i = 0; i < 10; i++) {
+			var rzad = elemID.rows[i + 2];
+			rzad.cells[1].textContent = "";
+			rzad.cells[2].textContent = "";
+		}
+		// wypelnianie tabelki wybrana lista wynikow
+		for (var i = 0; i < lista.length; i++) {
+			var rzad = elemID.rows[i + 2];
+			rzad.cells[1].innerHTML = lista[i][0]; // imie
+			rzad.cells[2].innerHTML = lista[i][1]; // wynik
+		}
+	}
+	
+	// UAKTUALNIA LISTY (MIESZANA I DEDYKOWANA) W LOCALSTORAGE - GOTOWA DO POBRANIA POPRZEZ 'GETRANKLIST'
+	function updateRankList(m_lista, s_lista, nl) {
+		var lnm = m_lista.length;
+		var lns = s_lista.length;
+		// aktualizacja mieszanej (ogolnej) tablicy wynikow
+		for (var i = 0; i < lnm; i++) {
+			window.localStorage.setItem("rank0_name_" + (i + 1), m_lista[i][0]);
+			window.localStorage.setItem("rank0_score_" + (i + 1), m_lista[i][1]);
+		}
+		// aktualizacja dedykowanej (konkretnej) tablicy wynikow (np. 5x5)
+		for (var i = 0; i < lns; i++)	{
+			window.localStorage.setItem("rank"+nl+"_name_" + (i + 1), s_lista[i][0]);
+			window.localStorage.setItem("rank"+nl+"_score_" + (i + 1), s_lista[i][1]);	
+		}
+	}
+	
+	/*	USTAWIA KONKRETNA TABLICE WYNIKOW (PRZYCISKI POD TABLICA WYNIKOW),
+		ORAZ ZWRACA KONRETNY TYP (NP. 5X5) TABLICY WYNIKOW W PRZYPADKU GDY CHCEMY TYLKO SPRAWDZIC BIEZACY TYP.
+		ARGUMENT: ZNAK -	TRUE: NASTEPNY TYP(ROZMIAR) TABLICY,
+											FALSE: POPRZEDNI TYP.
+											BRAK ARGUMENTU = ODCZYT.
+		return: ID konkretnej tablicy wynikow (0 lub 12 lub 16, itd.) - potrzebny jako ostatni argument dla updateRankList
+	*/
+	function rankSet (znak)	{
+		// tablice wynikow (ogolna, 3x4, 4x4, itd. )
+		var poziom = {"WSZYSTKO": 0, "3x4":12, "4x4": 16, "4x5":20, "6x4":24, "3x5":15, "5x5":25 };
+		
+		// pobieramy nazwe aktualnie wyswietlanej tablicy wynikow
+		var curRankId = document.getElementById("currentRank");
+		
+		// tworzymy tablice kluczy z obiektu 'poziom', aby mozna bylo pobierac indeksy (zwykly obiekt nie jest indeksowany)
+		var klucze = Object.keys(poziom);
+		
+		// pobieramy indeks klucza, ktory ma w nazwie nazwe aktualnej tablicy wynikow (np. "4x5" ma indeks 3)
+		var indeks = klucze.indexOf(curRankId.textContent);
+		
+		// jesli podano argument (true/false), zmien indeks. Jesli nie, funkcja tylko odczytuje i zwraca ID aktualnej tablicy wynikow
+		if (znak !== undefined) { znak ? indeks++ : indeks-- ; }
+		if (indeks < 0) indeks = 0;
+		if (indeks > 6) indeks = 6;
+		
+		// wyswietl zaktualizowana nazwe tablicy wynikow
+		curRankId.textContent = klucze[indeks];
+		return poziom[klucze[indeks]];	
+	}
