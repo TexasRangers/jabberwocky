@@ -18,23 +18,38 @@
 <!-- MENU-->
 <div id="menu">
 	<span class="menuName">Poziomy standardowe</span>
-	<div class="inputB">3X4<input type="button" value="12" onclick="genTab(3,4)"></input></div>
-	<div class="inputB">4X4<input type="button" value="16" onclick="genTab(4,4)"></input></div>
-	<div class="inputB">4X5<input type="button" value="20" onclick="genTab(4,5)"></input></div>
-	<div class="inputB">4X6<input type="button" value="24" onclick="genTab(6,4)"></input></div>
+	<div class="inputB">3X4<input type="button" id="34" value="12"></input></div>
+	<div class="inputB">4X4<input type="button" id="44" value="16"></input></div>
+	<div class="inputB">4X5<input type="button" id="45" value="20"></input></div>
+	<div class="inputB">4X6<input type="button" id="46" value="24"></input></div>
 	<span class="menuName">Poziomy trudne</span>
-	<div class="inputB">3X5<input type="button" value="15" onclick="genTab(3,5)"></input></div>
-	<div class="inputB">5X5<input type="button" value="25" onclick="genTab(5,5)"></input></div>
-	<button id="resetuj" onclick="resetuj();">RESTART</button>
-
+	<div class="inputB">3X5<input type="button" id="35" value="15"></input></div>
+	<div class="inputB">5X5<input type="button" id="55" value="25"></input></div>
+	<button id="resetuj">RESTART</button>
+	<div id="zestawy">	
+		<button id="changeSet">zestaw</button>				
+		<img id="currentsetImage" />
+	</div>
 </div>
 <div class="scoreboard">
 	<div id="timer"></div>
+	<div id="results">
+		<table id="ranking" border = "1">
+			<tr><th colspan="3">Ranking</th></tr>
+			<th></th><th>name</th><th>score</th>
+			<tr><td>1.</td><td></td><td></td></tr>
+			<tr><td>2.</td><td></td><td></td></tr>
+			<tr><td>3.</td><td></td><td></td></tr>
+			<tr><td>4.</td><td></td><td></td></tr>
+			<tr><td>5.</td><td></td><td></td></tr>
+			<tr><td>6.</td><td></td><td></td></tr>
+			<tr><td>7.</td><td></td><td></td></tr>
+			<tr><td>8.</td><td></td><td></td></tr>
+			<tr><td>9.</td><td></td><td></td></tr>
+			<tr><td>10.</td><td></td><td></td></tr>
+		</table>
+	</div>
+	<div class="RankSel"><div id="selRankMinus">-</div><div id="currentRank">WSZYSTKO</div><div id="selRankPlus">+</div></div>
 </div>
-
-
-
-
 </body>
-
 </html>
