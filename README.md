@@ -3,7 +3,7 @@ MEMO (alfa)
 
 Co brakuje:
 
-- tablicy wyników (ranking)
+
 - oprawy graficznej (m.in. tło główne)
 
 
