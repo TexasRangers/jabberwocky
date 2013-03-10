@@ -66,19 +66,19 @@
 		// przyciski wyboru tablicy wynikow
 		var changeTabMinus = document.getElementById("selRankMinus");
 		changeTabMinus.addEventListener("click",
-																		function() {
-																		rankSet(false);
-																		var ls = getRankList(rankSet());
-																		displayScoreboard(document.getElementById("ranking"), ls);
-																		}, false);
+			function() {
+					rankSet(false);
+					var ls = getRankList(rankSet());
+					displayScoreboard(document.getElementById("ranking"), ls);
+					}, false);
 		
 		var changeTabPlus = document.getElementById("selRankPlus");
 		changeTabPlus.addEventListener("click",
-																		function() {
-																		rankSet(true);
-																		var ls = getRankList(rankSet());
-																		displayScoreboard(document.getElementById("ranking"), ls);
-																		}, false);
+			function() {
+					rankSet(true);
+					var ls = getRankList(rankSet());
+					displayScoreboard(document.getElementById("ranking"), ls);
+					}, false);
 	}
 	
 
@@ -88,12 +88,12 @@
  	*/
 	function inicjuj_pola() {
   	// 25 elementów - max możliwych
-  	var rozmiar = 25;
-  	var pole = [];
-  	for(var i = 0; i < 25; i++) {
-        pole[i] = { obr: 0, stan: ZAKR };
-    }
-    return pole;
+  		var rozmiar = 25;
+  		var pole = [];
+  		for(var i = 0; i < 25; i++) {
+        		pole[i] = { obr: 0, stan: ZAKR };
+    		}
+    	return pole;
 	}
 
 	/**
@@ -101,14 +101,14 @@
  	* @return tablica z zainicjowanymi obrazkami.
  	*/
 	function inicjuj_obrazki(zestawik) {
-  	var obrazek = [];
-  	var obrazki_katalog = "images/";
-  	var kat = obrazki_katalog + "zestaw" + zestawik +"/";
-  	obrazek[0] = obrazki_katalog + "baobab.png";
-  	for(var i = 1; i <= 14; i++) {
-        obrazek[i] = kat + i + ".jpeg";
-  	}	
-    return obrazek;
+  		var obrazek = [];
+  		var obrazki_katalog = "images/";
+  		var kat = obrazki_katalog + "zestaw" + zestawik +"/";
+  		obrazek[0] = obrazki_katalog + "baobab.png";
+  		for(var i = 1; i <= 14; i++) {
+        		obrazek[i] = kat + i + ".jpeg";
+  		}	
+    	return obrazek;
 	}
 
 	// generacja tablicy pól
@@ -124,8 +124,8 @@
 		lp = 0;
 		p = 0;
 		for (var c = 0; c < lixy; c++) {
-	    pole[c].obr = sf[c];
-	    pole[c].stan = ZAKR; console.log("pole:"+c);
+	    		pole[c].obr = sf[c];
+	    		pole[c].stan = ZAKR; console.log("pole:"+c);
 		}
     
 		//wyswietlanie tablicy
@@ -134,12 +134,12 @@
 		e.style.height = (liy * 118) + 10 + 'px';
 		e.style.border = "1px solid white";
 		for (h = 0; h < lixy; h++) {
-		var pl = document.createElement("img");
-		pl.className = "pole";
-		pl.id = "p"+h;
-		pl.src = obrazek[0];
-		pl.addEventListener("click", (function(s){ return function(){ mainStart(s);}})(h), false);
-		e.appendChild(pl);
+			var pl = document.createElement("img");
+			pl.className = "pole";
+			pl.id = "p"+h;
+			pl.src = obrazek[0];
+			pl.addEventListener("click", (function(s){ return function(){ mainStart(s);}})(h), false);
+			e.appendChild(pl);
 		}
 		ft = lixy; //ilosc elementow tablicy (do okreslenia ilosci par do odkrycia)
 	}
@@ -147,14 +147,14 @@
 	// funkcja zwraca gotową tabelke z wylosowanymi indeksami obrazków potrzebną dla zmiennej SF z genTab()
 	function setfields(ilosc_pol) {
 		var pulaStart = [], pula = [], tabelka = [], wynik, b = 1;
-			//tworzenie zestawu obrazkow do wylosowania
+		//tworzenie zestawu obrazkow do wylosowania
   		//pula startowa z wszystkimi numerami obrazkow - [1,2,3,4,... 13,14]
 		for (var licznik = 0; licznik < 14; licznik++) { 
 	    pulaStart[licznik] = licznik + 1;
 		}
 	
 		/*tworzenie zestawu przetasowanych par obrazkow - np. [3,3,9,9,1,1, ... 6,6,12,12],	
-			w ten sposob maszyna losująca obrazek (zmienna LOS), wylosuje kazdy obrazek dokladnie 2 razy
+		w ten sposob maszyna losująca obrazek (zmienna LOS), wylosuje kazdy obrazek dokladnie 2 razy
 		*/		
 		for(var poc=0; poc<ilosc_pol; poc = poc + 2) {            
 			var s1 = Math.floor(Math.random() * pulaStart.length);
@@ -180,10 +180,10 @@
  	* @param nr nr pola w zmiennej pole[]
  	*/
 	function odkryj_pole(nr) {
-    // zmiana statusu pola jesli zakryte
-    var a = document.getElementById('p' + nr);
-    a.src = obrazek[pole[nr].obr];
-    pole[nr].stan = ODKR;
+    	// zmiana statusu pola jesli zakryte
+    		var a = document.getElementById('p' + nr);
+    		a.src = obrazek[pole[nr].obr];
+    		pole[nr].stan = ODKR;
 	}
 
 
@@ -212,17 +212,17 @@
 	}
 
 	function resetuj() {
-    if(tajmer) {
-        tajmer.stop();
-        tajmer.reset();
-    } else {
-        tajmer = new Tajmer("timer");      
-    }
+    		if(tajmer) {
+        	tajmer.stop();
+        	tajmer.reset();
+        	} else {
+        		tajmer = new Tajmer("timer");
+        		}
 		if (ft===0) return;
 		/*	generujemy ponownie tablice (automatycznie resetujac odpowiednie zmienne),
      		przekazując do genTab-a zmienne mx i my , wczesniej ustawione w obiekcie .mem, w funkcji
      		proxyReset. Zmienne te są ustawiane za pomoca wywołania tej funkcji w genTab().
-  	*/
+  		*/
 		genTab(proxyReset.mem.mx, proxyReset.mem.my);
 	}
 
@@ -253,19 +253,19 @@
 		}
 		p = 0; 
 		koniec_testu = true;
-    // gracz wygrał!
+    		// gracz wygrał!
 		if (lp === Math.floor(ft/2)) {
-            tajmer.stop();
-            var ac = tajmer.aktualny_czas();
-            var w = wynik(flips, ac, ft);
-            alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ ac + "\n\nPunkty: " + w);
-            var imie = prompt("Podaj imie: ");
-            var lista_main = processBoard(w, getRankList(), imie);
-            var lista_spec = processBoard(w, getRankList(ft), imie);
-            updateRankList(lista_main, lista_spec, ft);
-            displayScoreboard(document.getElementById("ranking"), getRankList(rankSet()));    
-            resetuj(); //resetuj czas i generuj nową tablice o tym samym rozmiarze (domyslnie)
-    }
+            		tajmer.stop();
+            		var ac = tajmer.aktualny_czas();
+            		var w = wynik(flips, ac, ft);
+            		alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ ac + "\n\nPunkty: " + w);
+            		var imie = prompt("Podaj imie: ");
+            		var lista_main = processBoard(w, getRankList(), imie);
+            		var lista_spec = processBoard(w, getRankList(ft), imie);
+            		updateRankList(lista_main, lista_spec, ft);
+            		displayScoreboard(document.getElementById("ranking"), getRankList(rankSet()));    
+            		resetuj(); //resetuj czas i generuj nową tablice o tym samym rozmiarze (domyslnie)
+    		}
 	}
 
 /**
