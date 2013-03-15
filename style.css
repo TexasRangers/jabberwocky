@@ -245,7 +245,8 @@ input	{
 			
 #currentRank	{
 			position: absolute;
-			left: calc(50% - 65px);
+			left: calc(50% - 65px); /* Firefox */
+			left: -webkit-calc(50% - 65px); /* Chrome/Chromium */
 			height: 30px;
 			font-size: 110%;			
 			width: 130px;
