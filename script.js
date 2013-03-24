@@ -259,10 +259,13 @@
             		var ac = tajmer.aktualny_czas();
             		var w = wynik(flips, ac, ft);
             		alert("Wynik: "+flips+" flipsów"+"\nCzas: "+ ac + "\n\nPunkty: " + w);
-            		var imie = prompt("Podaj imie: ");
-            		var lista_main = processBoard(w, getRankList(), imie);
-            		var lista_spec = processBoard(w, getRankList(ft), imie);
-            		updateRankList(lista_main, lista_spec, ft);
+            		var aktualna = getRankList(ft);
+            		if ( aktualna.length < 10 || aktualna[9][1] < w) {
+            			var imie = prompt("Podaj imie: ");
+            			var lista_main = processBoard(w, getRankList(), imie);
+            			var lista_spec = processBoard(w, aktualna, imie);
+            			updateRankList(lista_main, lista_spec, ft);
+            		}
             		displayScoreboard(document.getElementById("ranking"), getRankList(rankSet()));    
             		resetuj(); //resetuj czas i generuj nową tablice o tym samym rozmiarze (domyslnie)
     		}
